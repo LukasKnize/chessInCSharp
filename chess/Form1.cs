@@ -177,7 +177,7 @@ namespace chess
                 clickedField.Piece.pictureBox.Top = clickedField.Row * 100;
                 clickedField.Piece.pictureBox.Left = clickedField.Column * 100;
                 clickedField.Piece.pictureBox.BackColor = clickedField.Color == true ? Color.White : Color.DarkGray;
-                if (turn && clickedField.Row == 0)
+                if (turn && clickedField.Row == 0 && clickedField.Piece.Type == "Pawn")
                 {
                     var promotionForm = new PieceSelect(pieceSelected =>
                     {
@@ -185,7 +185,8 @@ namespace chess
                     }, turn, clickedField);
 
                     promotionForm.ShowDialog();
-                }else if (!turn && clickedField.Row == 7)
+                }
+                else if (!turn && clickedField.Row == 7 && clickedField.Piece.Type == "Pawn")
                 {
                     var promotionForm = new PieceSelect(pieceSelected =>
                     {
