@@ -22,5 +22,16 @@ namespace chess
             Panel = panel;
             Piece = piece;
         }
+
+        public Field DeepCopy()
+        {
+            return new Field(
+                Column,
+                Row,
+                Color,
+                new Panel(),
+                Piece?.DeepCopy()
+            );
+        }
     }
 }

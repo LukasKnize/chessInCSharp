@@ -13,6 +13,11 @@ namespace chess
         {
             var result = new List<(int, int)>();
             Field currentField = fields[row, column];
+            bool moveToGetFromCheckOnly = false;
+            if (KingMechanics.IsKingChecked(fields, currentField.Piece.Color))
+            {
+                moveToGetFromCheckOnly = true;
+            }
 
             // vektory směrů kterými může postava postupovat
             var directions = new (int, int)[] { (0, 1), (0, -1), (1, 0), (-1, 0) };
@@ -21,34 +26,46 @@ namespace chess
             foreach (var (dRow, dCol) in directions)
             {
                 int currentRow = row;
-                int currentCol = column;
+                int currentColumn = column;
 
                 while (true)
                 {
                     currentRow += dRow;
-                    currentCol += dCol;
+                    currentColumn += dCol;
 
                     // kontrola že jsme stále na šachovnici
                     if (currentRow < 0 || currentRow >= 8 ||
-                        currentCol < 0 || currentCol >= 8)
+                        currentColumn < 0 || currentColumn >= 8)
                     {
                         break;
                     }
 
-                    var targetField = fields[currentRow, currentCol];
+                    var targetField = fields[currentRow, currentColumn];
                     var targetPiece = targetField.Piece;
 
                     if (targetPiece == null)
                     {
-                        // pokud je pole prázdné, tak můžeme přidat
-                        result.Add((currentRow, currentCol));
+                        // pokud je pole prázdné a nevznikne tak šach na našho krále, tak můžeme přidat
+                        Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
+                        temporaryChessBoard[currentRow, currentColumn].Piece = temporaryChessBoard[row, column].Piece;
+                        temporaryChessBoard[row, column].Piece = null;
+                        if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                        {
+                            result.Add((currentRow, currentColumn));
+                        }
                     }
                     else
                     {
-                        // pokud je v cílovém poli protivník, tak můžeme přidat
+                        // pokud je v cílovém poli protivník a nevznikne tak šach na našho krále, tak můžeme přidat
                         if (targetPiece.Color != currentField.Piece.Color)
                         {
-                            result.Add((currentRow, currentCol));
+                            Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
+                            temporaryChessBoard[currentRow, currentColumn].Piece = temporaryChessBoard[row, column].Piece;
+                            temporaryChessBoard[row, column].Piece = null;
+                            if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                            {
+                                result.Add((currentRow, currentColumn));
+                            }
                         }
                         break; //ukončíme pohyb v daném směru 
                     }
@@ -71,7 +88,6 @@ namespace chess
             {
                 int currentRow = row;
                 int currentColumn = column;
-                bool covering = true;
                 while (true)
                 {
                     currentRow += dRow;
@@ -99,23 +115,17 @@ namespace chess
                         {
                             result.Add((currentRow, currentColumn));
                             //aby král nemohl postoupit o jedno pole od této postavy na které ale stále postava míří
-                            if(targetPiece.Type != "King")
+                            if (targetPiece.Type != "King")
                             {
                                 break;
                             }
-                            
+
                         }
                         //pokud míří na některou naši figurku, tak ji král nemůže vzít
                         else if (targetField.Color == currentField.Piece.Color)
                         {
-                            if (covering)
-                            {
-                                covering = false;
-                            }
-                            else
-                            {
-                                break; //ukončíme pohyb v daném směru
-                            }
+                            result.Add((currentRow, currentColumn));
+                            break; //ukončíme pohyb v daném směru
                         }
                     }
                 }

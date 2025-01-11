@@ -17,5 +17,10 @@ namespace chess
             Color = color;
             this.pictureBox = pictureBox;
         }
+
+        public Piece DeepCopy()
+        {
+            return new Piece(Type, Color, new PictureBox());
+        }
     }
 }

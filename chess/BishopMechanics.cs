@@ -39,15 +39,27 @@ namespace chess
 
                     if (targetPiece == null)
                     {
-                        // pokud je pole prázdné, tak můžeme přidat
-                        result.Add((currentRow, currentColumn));
+                        // pokud je pole prázdné a nevznikne tak šach na našho krále, tak můžeme přidat
+                            Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
+                            temporaryChessBoard[currentRow, currentColumn].Piece = temporaryChessBoard[row, column].Piece;
+                            temporaryChessBoard[row, column].Piece = null;
+                            if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                            {
+                                result.Add((currentRow, currentColumn));
+                            }
                     }
                     else
                     {
-                        // pokud je v cílovém poli protivník, tak můžeme přidat
+                        // pokud je v cílovém poli protivník a nevznikne tak šach na našho krále, tak můžeme přidat
                         if (targetPiece.Color != currentField.Piece.Color)
                         {
-                            result.Add((currentRow, currentColumn));
+                                Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
+                                temporaryChessBoard[currentRow, currentColumn].Piece = temporaryChessBoard[row, column].Piece;
+                                temporaryChessBoard[row, column].Piece = null;
+                                if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                                {
+                                    result.Add((currentRow, currentColumn));
+                                }
                         }
                         break; //ukončíme pohyb v daném směru 
                     }
@@ -70,7 +82,6 @@ namespace chess
             {
                 int currentRow = row;
                 int currentColumn = column;
-                bool covering = true;
 
                 while (true)
                 {
@@ -108,14 +119,9 @@ namespace chess
                         //pokud míří na některou naši figurku, tak ji král nemůže vzít
                         else if (targetField.Color == currentField.Piece.Color)
                         {
-                            if (covering)
-                            {
-                                covering = false;
-                            }
-                            else
-                            {
+                                result.Add((currentRow, currentColumn));
                                 break; //ukončíme pohyb v daném směru
-                            }
+                            
                         }
                     }
                 }

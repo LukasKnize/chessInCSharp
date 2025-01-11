@@ -165,7 +165,8 @@ namespace chess
                         }
                     });
                 }
-            }else if(HighLightedCoords.Contains((clickedField.Row, clickedField.Column)))
+            }
+            else if (HighLightedCoords.Contains((clickedField.Row, clickedField.Column)))
             {
 
                 if (clickedField.Piece != null && clickedField.Piece.pictureBox != null)
@@ -181,7 +182,7 @@ namespace chess
                 {
                     var promotionForm = new PieceSelect(pieceSelected =>
                     {
-                        PawnPromotion(pieceSelected);
+                        PawnMechanics.PawnPromotion(pieceSelected, Controls);
                     }, turn, clickedField);
 
                     promotionForm.ShowDialog();
@@ -190,15 +191,26 @@ namespace chess
                 {
                     var promotionForm = new PieceSelect(pieceSelected =>
                     {
-                        PawnPromotion(pieceSelected);
+                        PawnMechanics.PawnPromotion(pieceSelected, Controls);
                     }, turn, clickedField);
 
                     promotionForm.ShowDialog();
                 }
 
                 ClearHightLight();
+                if (KingMechanics.IsKingChecked(Fields, !turn))
+                {
+                    if (KingMechanics.IsKingCheckedmated(Fields, !turn))
+                    {
+                        Debug.Print("mate");
+                    }
+                }
                 turn = !turn;
-            }else if(clickedField.Column == SelectedField.Column && clickedField.Row == SelectedField.Row) {
+
+
+            }
+            else if (clickedField.Column == SelectedField.Column && clickedField.Row == SelectedField.Row)
+            {
                 if (clickedField.Piece != null)
                 {
                     clickedField.Piece.pictureBox.BackColor = clickedField.Color == true ? Color.White : Color.DarkGray;
@@ -217,88 +229,19 @@ namespace chess
             foreach (var HighLightedCoord in HighLightedCoords)
             {
                 Field field = Fields[HighLightedCoord.Item1, HighLightedCoord.Item2];
-                if (field.Piece != null) {
+                if (field.Piece != null)
+                {
                     field.Piece.pictureBox.BackColor = field.Color == true ? Color.White : Color.DarkGray;
                 }
                 else
                 {
                     field.Panel.BackColor = field.Color == true ? Color.White : Color.DarkGray;
                 }
-                
+
             }
             SelectedField.Panel.BackColor = SelectedField.Color == true ? Color.White : Color.DarkGray;
             SelectedField = null;
             HighLightedCoords.Clear();
-        }
-
-        private void PawnPromotion((Field, string ) promotionInfo)
-        {
-            string image = "";
-            string piece = "";
-            bool pieceColor = true;
-            switch (promotionInfo.Item2)
-            {
-                case "BR":
-                    image = "blackRook.png";
-                    piece = "Rook";
-                    pieceColor = false;
-                    break;
-                case "WR":
-                    image = "whiteRook.png";
-                    piece = "Rook";
-                    pieceColor = true;
-                    break;
-                case "BN":
-                    image = "blackKnight.png";
-                    piece = "Knight";
-                    pieceColor = false;
-                    break;
-                case "WN":
-                    image = "whiteKnight.png";
-                    piece = "Knight";
-                    pieceColor = true;
-                    break;
-                case "BB":
-                    image = "blackBishop.png";
-                    piece = "Bishop";
-                    pieceColor = false;
-                    break;
-                case "WB":
-                    image = "whiteBishop.png";
-                    piece = "Bishop";
-                    pieceColor = true;
-                    break;
-                case "BQ":
-                    image = "blackQueen.png";
-                    piece = "Queen";
-                    pieceColor = false;
-                    break;
-                case "WQ":
-                    image = "whiteQueen.png";
-                    piece = "Queen";
-                    pieceColor = true;
-                    break;
-                default:
-                    break;
-            }
-
-            if (image != "" && piece != "")
-            {
-                Controls.Remove(promotionInfo.Item1.Piece.pictureBox);
-                
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.Width = 100;
-                pictureBox.Height = 100;
-                pictureBox.Image = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", image));
-                pictureBox.Left = promotionInfo.Item1.Column * 100;
-                pictureBox.Top = promotionInfo.Item1.Row * 100;
-                pictureBox.BackColor = promotionInfo.Item1.Color ? Color.White : Color.DarkGray;
-                pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                pictureBox.Enabled = false;
-                Controls.Add(pictureBox);
-                Controls.SetChildIndex(pictureBox, 0);
-                promotionInfo.Item1.Piece = new Piece(piece, pieceColor, pictureBox);
-            }
         }
     }
 }

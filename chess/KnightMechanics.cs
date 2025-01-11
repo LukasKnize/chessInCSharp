@@ -37,7 +37,13 @@ namespace chess
                     if (targetPiece == null || targetPiece.Color != currentField.Piece.Color)
                     {
                         // pokud je pole prázdné, nebo je na něm protivník, tak můžeme přidat
-                        result.Add((targetRow, targetColumn));
+                        Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
+                        temporaryChessBoard[targetRow, targetColumn].Piece = temporaryChessBoard[row, column].Piece;
+                        temporaryChessBoard[row, column].Piece = null;
+                        if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                        {
+                            result.Add((targetRow, targetColumn));
+                        }
                     }
                 }
             }
