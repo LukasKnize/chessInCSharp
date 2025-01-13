@@ -106,7 +106,7 @@ namespace chess
                     else
                     {
                         // pokud je v cílovém poli protivník, tak můžeme přidat
-                        if (targetPiece.Color != currentField.Piece.Color)
+                        if (currentField.Piece != null && targetPiece.Color != currentField.Piece.Color)
                         {
                             result.Add((currentRow, currentColumn));
                             //aby král nemohl postoupit o jedno pole od této postavy na které ale stále postava míří
@@ -117,7 +117,7 @@ namespace chess
 
                         }
                         //pokud míří na některou naši figurku, tak ji král nemůže vzít
-                        else if (targetField.Color == currentField.Piece.Color)
+                        else if (currentField.Piece != null && targetField.Color == currentField.Piece.Color)
                         {
                                 result.Add((currentRow, currentColumn));
                                 break; //ukončíme pohyb v daném směru

@@ -11,13 +11,15 @@ namespace chess
             InitializeComponent();
         }
 
+        ChessBoardManager chessBoardManager = new ChessBoardManager();
+
         private void DrawGame(object sender, EventArgs e)
         {
-            DrawChessBoard();
-            CreatePieces(GameConstants.initialBoard);
+            chessBoardManager.DrawChessBoard(Controls);
+            chessBoardManager.CreatePieces(GameConstants.initialBoard, Controls);
         }
 
-        Field[,] Fields = new Field[8, 8];
+        /*Field[,] Fields = new Field[8, 8];
 
         private void DrawChessBoard()
         {
@@ -41,12 +43,11 @@ namespace chess
                     panel.Click += (sender, e) => { fieldClick(Fields[currentRow, currentColumn], panel); };
                 }
             }
-        }
-        List<Piece> piecesList = new List<Piece>();
+        }*/
 
-        private bool turn = true;
+        //private bool turn = true;
 
-        private void CreatePieces(string[,] initialValues)
+        /*private void CreatePieces(string[,] initialValues)
         {
             for (int rowIndex = 0; rowIndex < initialValues.GetLength(0); rowIndex++)
             {
@@ -139,8 +140,9 @@ namespace chess
                 }
             }
         }
-
+        
         private Field? SelectedField;
+
         private List<(int, int)> HighLightedCoords = new List<(int, int)>();
         private void fieldClick(Field clickedField, Panel selectedPanel)
         {
@@ -242,6 +244,6 @@ namespace chess
             SelectedField.Panel.BackColor = SelectedField.Color == true ? Color.White : Color.DarkGray;
             SelectedField = null;
             HighLightedCoords.Clear();
-        }
+        }*/
     }
 }

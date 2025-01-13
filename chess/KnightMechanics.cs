@@ -34,13 +34,13 @@ namespace chess
                     var targetField = fields[targetRow, targetColumn];
                     var targetPiece = targetField.Piece;
 
-                    if (targetPiece == null || targetPiece.Color != currentField.Piece.Color)
+                    if (targetPiece == null || (currentField.Piece != null && targetPiece.Color != currentField.Piece.Color))
                     {
                         // pokud je pole prázdné, nebo je na něm protivník, tak můžeme přidat
                         Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(fields);
                         temporaryChessBoard[targetRow, targetColumn].Piece = temporaryChessBoard[row, column].Piece;
                         temporaryChessBoard[row, column].Piece = null;
-                        if (!KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
+                        if (currentField.Piece != null && !KingMechanics.IsKingChecked(temporaryChessBoard, currentField.Piece.Color))
                         {
                             result.Add((targetRow, targetColumn));
                         }

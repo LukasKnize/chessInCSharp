@@ -10,6 +10,7 @@ namespace chess
     {
         public string Type { get; set; }
         public bool Color { get; set; }
+        public bool Dirty { get; set; } = false; //používáme k zjištění zda se král nebo věže pohly nebo ne (kvůli rošáďě) 
         public PictureBox pictureBox { get; set; }
         public Piece(string type, bool color, PictureBox pictureBox)
         {

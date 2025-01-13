@@ -35,7 +35,7 @@ namespace chess
                     if (targetPiece == null)
                     {
                         // pokud je pole prázdné, tak můžeme přidat
-                        if (!IsCheck(fields, currentRow, currentColumn, currentField.Piece.Color))
+                        if (currentField.Piece != null && !IsCheck(fields, currentRow, currentColumn, currentField.Piece.Color))
                         {
                             result.Add((currentRow, currentColumn));
                         }
@@ -45,7 +45,7 @@ namespace chess
                     else
                     {
                         // pokud je v cílovém poli protivník, tak můžeme přidat
-                        if (targetPiece.Color != currentField.Piece.Color)
+                        if (currentField.Piece != null && targetPiece.Color != currentField.Piece.Color)
                         {
                             if (!IsCheck(fields, currentRow, currentColumn, currentField.Piece.Color))
                             {
@@ -58,13 +58,56 @@ namespace chess
 
 
             }
+            result.AddRange(Castle(fields, row, column));
+            return result;
+        }
+
+        public static List<(int, int)> Castle(Field[,] fields, int row, int column)
+        {
+            var result = new List<(int, int)>();
+            Field currentField = fields[row, column];
+            //pokud je na políčku král, král se nepohl, a král není šachován
+            if (currentField.Piece != null && !currentField.Piece.Dirty && currentField.Piece.Type == "King" && !IsCheck(fields, row, column, currentField.Piece.Color))
+            {
+                //tyhle ošklivý podmínky by měli zajistit že políčka mezi králem a věži jsou prázdná, nešachovaná a že s věží nebylo pohnuto (a teda hlavně jestli tam je)
+                if(row == 0 && fields[row, 1].Piece == null && fields[row, 2].Piece == null && fields[row, 3].Piece == null && fields[row, 0].Piece != null && fields[row, 0].Piece.Type == "Rook" && !fields[row, 0].Piece.Dirty)
+                {
+                    if (!IsCheck(fields, row, 1, currentField.Piece.Color) && !IsCheck(fields, row, 2, currentField.Piece.Color) && !IsCheck(fields, row, 3, currentField.Piece.Color))
+                    {
+                        result.Add((row, 1));
+                    }
+                }
+                
+                if(row == 0 && fields[row, 5].Piece == null && fields[row, 6].Piece == null && fields[row, 7].Piece != null && fields[row, 7].Piece.Type == "Rook" && !fields[row, 7].Piece.Dirty)
+                {
+                    if (!IsCheck(fields, row, 5, currentField.Piece.Color) && !IsCheck(fields, row, 6, currentField.Piece.Color))
+                    {
+                        result.Add((row, 6));
+                    }
+                }
+
+                if (row == 7 && fields[row, 1].Piece == null && fields[row, 2].Piece == null && fields[row, 3].Piece == null && fields[row, 0].Piece != null && fields[row, 0].Piece.Type == "Rook" && !fields[row, 0].Piece.Dirty)
+                {
+                    if (!IsCheck(fields, row, 1, currentField.Piece.Color) && !IsCheck(fields, row, 2, currentField.Piece.Color) && !IsCheck(fields, row, 3, currentField.Piece.Color))
+                    {
+                        result.Add((row, 1));
+                    }
+                }
+
+                if (row == 7 && fields[row, 5].Piece == null && fields[row, 6].Piece == null && fields[row, 7].Piece != null && fields[row, 7].Piece.Type == "Rook" && !fields[row, 7].Piece.Dirty)
+                {
+                    if (!IsCheck(fields, row, 5, currentField.Piece.Color) && !IsCheck(fields, row, 6, currentField.Piece.Color))
+                    {
+                        result.Add((row, 6));
+                    }
+                }
+            }
             return result;
         }
 
         public static List<(int, int)> KingCoverage(Field[,] fields, int row, int column)
         {
             var result = new List<(int, int)>();
-            Field currentField = fields[row, column];
 
             // vektory směrů kterými může postava postupovat
             var directions = new (int, int)[] { (1, 1), (1, -1), (-1, 1), (-1, -1), (0, 1), (0, -1), (1, 0), (-1, 0) };
@@ -81,8 +124,6 @@ namespace chess
                 if (currentRow >= 0 && currentRow < fields.GetLength(0) &&
                     currentColumn >= 0 && currentColumn < fields.GetLength(1))
                 {
-                    var targetField = fields[currentRow, currentColumn];
-                    var targetPiece = targetField.Piece;
                     result.Add((currentRow, currentColumn));
                 }
 

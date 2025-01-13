@@ -82,7 +82,7 @@ namespace chess
                             }
                         }
 
-                        
+
                     }
                     else if (field.GetLength(0) - 1 != row && field[row + 1, column].Piece == null)
                     {
@@ -113,7 +113,7 @@ namespace chess
                     {
                         if (column > 0 && field[row - 1, column - 1].Piece != null && field[row - 1, column - 1].Piece.Color != currentField.Piece.Color)
                         {
-                            
+
                             Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(field);
                             temporaryChessBoard[row - 1, column - 1].Piece = temporaryChessBoard[row, column].Piece;
                             temporaryChessBoard[row, column].Piece = null;
@@ -124,7 +124,7 @@ namespace chess
                         }
                         if (column < field.GetLength(1) - 1 && field[row - 1, column + 1].Piece != null && field[row - 1, column + 1].Piece.Color != currentField.Piece.Color)
                         {
-                            
+
                             Field[,] temporaryChessBoard = ObjectExtensions.DeepCopyFieldArray(field);
                             temporaryChessBoard[row - 1, column + 1].Piece = temporaryChessBoard[row, column].Piece;
                             temporaryChessBoard[row, column].Piece = null;
@@ -176,16 +176,16 @@ namespace chess
                 {
                     if (row > 0)
                     {
-                            result.Add((row - 1, column - 1));
-                            result.Add((row - 1, column + 1));
+                        result.Add((row - 1, column - 1));
+                        result.Add((row - 1, column + 1));
                     }
                 }
                 else
                 {
                     if (row < 7)
                     {
-                            result.Add((row + 1, column - 1));
-                            result.Add((row + 1, column + 1));
+                        result.Add((row + 1, column - 1));
+                        result.Add((row + 1, column + 1));
                     }
                 }
             }
@@ -243,23 +243,23 @@ namespace chess
                     break;
             }
 
-            if (image != "" && piece != "")
+            if (image != "" && piece != "" && promotionInfo.Item1.Piece != null)
             {
-                controls.Remove(promotionInfo.Item1.Piece.pictureBox);
+                    controls.Remove(promotionInfo.Item1.Piece.pictureBox);
 
-                PictureBox pictureBox = new PictureBox();
-                pictureBox.Width = 100;
-                pictureBox.Height = 100;
-                pictureBox.Image = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", image));
-                pictureBox.Left = promotionInfo.Item1.Column * 100;
-                pictureBox.Top = promotionInfo.Item1.Row * 100;
-                pictureBox.BackColor = promotionInfo.Item1.Color ? Color.White : Color.DarkGray;
-                pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
-                pictureBox.Enabled = false;
-                controls.Add(pictureBox);
-                controls.SetChildIndex(pictureBox, 0);
-                promotionInfo.Item1.Piece = new Piece(piece, pieceColor, pictureBox);
-            }
+                    PictureBox pictureBox = new PictureBox();
+                    pictureBox.Width = 100;
+                    pictureBox.Height = 100;
+                    pictureBox.Image = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", image));
+                    pictureBox.Left = promotionInfo.Item1.Column * 100;
+                    pictureBox.Top = promotionInfo.Item1.Row * 100;
+                    pictureBox.BackColor = promotionInfo.Item1.Color ? Color.White : Color.DarkGray;
+                    pictureBox.SizeMode = PictureBoxSizeMode.CenterImage;
+                    pictureBox.Enabled = false;
+                    controls.Add(pictureBox);
+                    controls.SetChildIndex(pictureBox, 0);
+                    promotionInfo.Item1.Piece = new Piece(piece, pieceColor, pictureBox);
+                }
         }
     }
 }
