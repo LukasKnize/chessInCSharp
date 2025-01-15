@@ -2,6 +2,7 @@
 {
     public static class ObjectExtensions
     {
+        //funkce na deep copy pole Field
         public static Field[,] DeepCopyFieldArray(Field[,] originalArray)
         {
             int rows = originalArray.GetLength(0);

@@ -155,7 +155,7 @@ namespace chess
                         "Queen" => QueenMechanics.QueenCoverage(fields, i, j),
                         "Knight" => KnightMechanics.KnightCoverage(fields, i, j),
                         "Pawn" => PawnMechanics.PawnCoverage(fields, i, j),
-                        "King" => PawnMechanics.PawnCoverage(fields, i, j),
+                        "King" => KingMechanics.KingCoverage(fields, i, j),
                         _ => new List<(int, int)>()
                     };
 

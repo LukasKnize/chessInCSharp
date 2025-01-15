@@ -8,7 +8,17 @@ namespace chess
 {
     public static class GameConstants
     {
-        public static readonly string[,] initialBoard = { { "BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR" }, { "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP" }, { "", "", "", "", "", "", "", "" }, { "", "", "", "", "", "", "", "" }, { "", "", "", "", "", "", "", "" }, { "", "", "", "", "", "", "", "" }, { "WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP" }, { "WR", "WN", "WB", "WQ", "WK", "WB", "WN", "WR" } };
-
+        //výchozí šachovnice
+        public static readonly string[][] initialBoard =
+        {
+            new string[] { "BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR" },
+            new string[] { "BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP" },
+            new string[] { "", "", "", "", "", "", "", "" },
+            new string[] { "", "", "", "", "", "", "", "" },
+            new string[] { "", "", "", "", "", "", "", "" },
+            new string[] { "", "", "", "", "", "", "", "" },
+            new string[] { "WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP" },
+            new string[] { "WR", "WN", "WB", "WQ", "WK", "WB", "WN", "WR" }
+        };
     }
 }

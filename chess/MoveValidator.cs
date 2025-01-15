@@ -10,6 +10,7 @@ namespace chess
 {
     public static class MoveValidator
     {
+        //funkce vrací možné tahy dané figurky
         public static List<(int, int)> GetValidMoves(Field[,] field, int row, int column)
         {
             var result = new List<(int, int)>();

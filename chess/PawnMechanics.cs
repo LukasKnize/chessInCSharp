@@ -192,6 +192,7 @@ namespace chess
             return result;
         }
 
+        //jak název napovídá, když dojde pěšec nakonec hrací plochy, tak si hráč může vybrat jinou figurku místo něho
         public static void PawnPromotion((Field, string) promotionInfo, Control.ControlCollection controls)
         {
             string image = "";

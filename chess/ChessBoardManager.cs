@@ -15,8 +15,10 @@ namespace chess
         private bool turn = true;
 
         //funkce vykreslí šachovnici na formulář
-        public void DrawChessBoard(Control.ControlCollection controls)
+        public void DrawChessBoard(Control.ControlCollection controls, Label checkLabel)
         {
+            ClearBoard(controls);
+
             bool lastColor = false;
 
             for (int rowIndex = 0; rowIndex < 8; rowIndex++)
@@ -34,22 +36,22 @@ namespace chess
                     Fields[rowIndex, columnIndex] = new Field(columnIndex, rowIndex, columnIndex == 7 ? !lastColor : lastColor, panel, null);
                     int currentRow = rowIndex;
                     int currentColumn = columnIndex;
-                    panel.Click += (sender, e) => { fieldClick(Fields[currentRow, currentColumn], panel, controls); };
+                    panel.Click += (sender, e) => { fieldClick(Fields[currentRow, currentColumn], panel, controls, checkLabel); };
                 }
             }
         }
 
         //funkce vytvoří postavy na specifických polích
-        public void CreatePieces(string[,] initialValues, Control.ControlCollection controls)
+        public void CreatePieces(string[][] initialValues, Control.ControlCollection controls)
         {
             for (int rowIndex = 0; rowIndex < initialValues.GetLength(0); rowIndex++)
             {
-                for (int columnIndex = 0; columnIndex < initialValues.GetLength(1); columnIndex++)
+                for (int columnIndex = 0; columnIndex < initialValues[rowIndex].GetLength(0); columnIndex++)
                 {
                     string image = "";
                     string piece = "";
                     bool pieceColor = true;
-                    switch (initialValues[rowIndex, columnIndex])
+                    switch (initialValues[rowIndex][columnIndex])
                     {
                         case "BP":
                             image = "blackPawn.png";
@@ -139,7 +141,7 @@ namespace chess
         private List<(int, int)> HighLightedCoords = new List<(int, int)>();
 
         //funkce která se stará o pohyb postav a vykreslování průběhu hry
-        private void fieldClick(Field clickedField, Panel selectedPanel, Control.ControlCollection controls)
+        private void fieldClick(Field clickedField, Panel selectedPanel, Control.ControlCollection controls, Label checkLabel)
         {
             //pokud nemáme žádné pole vybrané
             if (SelectedField == null)
@@ -275,11 +277,19 @@ namespace chess
                 {
                     if (KingMechanics.IsKingCheckedmated(Fields, !turn))
                     {
-                        Debug.Print("mate");
+                        checkLabel.Text = "Šach mat";
+                    }
+                    else
+                    {
+                        checkLabel.Text = "Šach";
                     }
                 }
+                else
+                {
+                    checkLabel.Text = "";
+                }
                 turn = !turn;
-
+                GameSave.SaveGame(turn, GameSave.BoardConvertor(Fields));
 
             }
             //pokud znovu klikneme na naši vybranou figurku, zvýraznění zrušíme a můžeme vybrat jinou figurku
@@ -318,6 +328,33 @@ namespace chess
                 SelectedField.Panel.BackColor = SelectedField.Color == true ? Color.White : Color.DarkGray;
             SelectedField = null;
             HighLightedCoords.Clear();
+        }
+
+        public void SetTurn(bool currentTurn)
+        {
+            turn = currentTurn;
+        }
+
+        private void ClearBoard(Control.ControlCollection controls)
+        {
+            foreach (var field in Fields)
+            {
+                if (field != null && field.Piece != null && field.Piece.pictureBox != null)
+                {
+                    controls.Remove(field.Piece.pictureBox);
+                    field.Piece.pictureBox.Dispose();
+                    field.Piece = null;
+                }
+
+                if (field != null && field.Panel != null)
+                {
+                    controls.Remove(field.Panel);
+                    field.Panel.Dispose();
+                }
+            }
+            //na moderním hardware asi není takový problém ale když jsem mačkal hodně to tlačítko nová hra, tak se využití paměti zbytečně zvišovalo
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

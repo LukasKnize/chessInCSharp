@@ -54,7 +54,6 @@ namespace chess
         public static List<(int, int)> KnightCoverage(Field[,] fields, int row, int column)
         {
             var result = new List<(int, int)>();
-            Field currentField = fields[row, column];
 
             // vektory směrů kterými může postava postupovat
             var directions = new (int, int)[]
@@ -73,11 +72,7 @@ namespace chess
                 if (targetRow >= 0 && targetRow < fields.GetLength(0) &&
                     targetColumn >= 0 && targetColumn < fields.GetLength(1))
                 {
-                    var targetField = fields[targetRow, targetColumn];
-                    var targetPiece = targetField.Piece;
-
-                        result.Add((targetRow, targetColumn));
-                    
+                        result.Add((targetRow, targetColumn));        
                 }
             }
 
